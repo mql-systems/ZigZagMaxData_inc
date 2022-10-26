@@ -25,21 +25,40 @@ class CZigZagMaxData
       ZigZagMaxData     m_ZzmData[];
       datetime          m_TimeFirstBar;
       datetime          m_TimeLastBar;
+      int               m_TrendLastBar;
+      //---
+      datetime          m_NewBarTime;
    
    protected:
       bool              SetFirstBarTime();
       
    public:
-                        CZigZagMaxData(void): m_Init(false), m_HandleZzm(INVALID_HANDLE), m_TimeLastBar(0) {};
-                       ~CZigZagMaxData(void) {};
+                        CZigZagMaxData(void);
+                       ~CZigZagMaxData(void);
       //---
       bool              Init(const string symbol, const ENUM_TIMEFRAMES period, const int calcBarsCount);
       bool              Calculate();
       //---
-      string            Symbol()          { return m_Symbol;    };
-      ENUM_TIMEFRAMES   Period()          { return m_Period;    };
-      int               IndicatorHandle() { return m_HandleZzm; };
+      string            Symbol()          { return m_Symbol;       };
+      ENUM_TIMEFRAMES   Period()          { return m_Period;       };
+      int               IndicatorHandle() { return m_HandleZzm;    };
+      datetime          TimeFirstBar()    { return m_TimeFirstBar; };
+      datetime          TimeLastBar()     { return m_TimeLastBar;  };
 };
+
+//+------------------------------------------------------------------+
+//| Constructor                                                      |
+//+------------------------------------------------------------------+
+void CZigZagMaxData::CZigZagMaxData(void):m_Init(false),
+                                          m_HandleZzm(INVALID_HANDLE),
+                                          m_NewBarTime(0)
+{}
+
+//+------------------------------------------------------------------+
+//| Destructor                                                       |
+//+------------------------------------------------------------------+
+void CZigZagMaxData::~CZigZagMaxData(void)
+{}
 
 //+------------------------------------------------------------------+
 //| Initialization                                                   |
@@ -76,30 +95,41 @@ bool CZigZagMaxData::Calculate()
    
    if (newBarTime == 0)
       return false;
-   if (m_TimeLastBar == newBarTime)
+   if (m_NewBarTime == newBarTime)
       return true;
    
    //--- the first point of reference
-   if (m_TimeLastBar == 0 && ! SetFirstBarTime())
+   if (m_NewBarTime == 0 && ! SetFirstBarTime())
       return false;
    
    //--- get data from the indicator
    double zzmTrend[];
-   int zzmCnt = CopyBuffer(m_HandleZzm, 2, m_TimeLastBar, newBarTime, zzmTrend);
-   
-   if (zzmCnt < 2 || m_TimeLastBar != iTime(m_Symbol, m_Period, zzmCnt))
+   int zzmCnt = CopyBuffer(m_HandleZzm, 2, newBarTime, m_TimeLastBar, zzmTrend);
+   if (zzmCnt < 2)
       return false;
    
-   //---
-   Print(1);
+   datetime timeBars[];
+   if (CopyTime(m_Symbol, m_Period, 1, zzmCnt, timeBars) != zzmCnt || m_TimeLastBar != timeBars[zzmCnt-1])
+      return false;
    
-   //m_TimeLastBar = newBarTime;
+   //--- calc
+   int i = 1; // the zero element is always calculated
+   for (; i<zzmCnt; i++)
+   {
+      if (zzmTrend[i] == 0)
+         break;
+      
+      m_TrendLastBar = (int)zzmTrend[i];
+      m_TimeLastBar = timeBars[i];
+      
+      // zzmTrend[i] == -2
+      // zzmTrend[i] == -1
+      // zzmTrend[i] ==  0
+      // zzmTrend[i] ==  1
+      // zzmTrend[i] ==  2
+   }
    
-//   //--- calc
-//   int bars = Bars(m_Symbol, m_Period);
-//   
-//   if (bars == 0 || bars < ZZMD_CALC_BARS_MIN)
-//      return false;
+   m_NewBarTime = newBarTime;
    
    return true;
 }
@@ -119,9 +149,18 @@ bool CZigZagMaxData::SetFirstBarTime()
    if (m_CalcBarsCount > barCnt)
       m_CalcBarsCount = barCnt;
    
-   m_TimeLastBar = iTime(m_Symbol, m_Period, m_CalcBarsCount-1);
+   datetime barTime = iTime(m_Symbol, m_Period, m_CalcBarsCount-1);
+   if (barTime == 0)
+      return false;
    
-   return (m_TimeLastBar > 0);
+   double lastBarTrend[];
+   if (CopyBuffer(m_HandleZzm, 2, barTime, 1, lastBarTrend) != 1)
+      return false;
+   
+   m_TimeLastBar = m_NewBarTime = barTime;
+   m_TrendLastBar = (int)lastBarTrend[0];
+   
+   return true;
 }
 
 //+------------------------------------------------------------------+
