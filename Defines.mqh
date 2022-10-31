@@ -20,11 +20,25 @@
 
 #resource "\\"+ZZMD_INDICATOR_ZZM
 
-//--- to collect ZigZagMax data
-struct ZigZagMaxData
+//--- ZigZagMax Trend buffer
+enum ENUM_ZZMD_TREND
 {
-   double   doubleHigh;
-   double   doubleLow;
-   datetime timeHigh;
-   datetime timeLow;
+   ZZMD_TREND_NONE      =  0, // 0
+   ZZMD_TREND_UP        =  1, // 1
+   ZZMD_TREND_UP_DOWN   =  2, // 2
+   ZZMD_TREND_DOWN      = -1, // -1
+   ZZMD_TREND_DOWN_UP   = -2  // -2
+};
+
+//--- to collect ZigZagMax data
+struct ZigZagMaxInfo
+{
+   double   priceHigh;
+   double   priceLow;
+   double   priceThird;
+   datetime timeA;
+   datetime timeB;
+   int      trend;
+   //---
+   void ZigZagMaxInfo(): priceThird(0.0) {}
 };
