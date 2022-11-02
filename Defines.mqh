@@ -33,12 +33,12 @@ enum ENUM_ZZMD_TREND
 //--- to collect ZigZagMax data
 struct ZigZagMaxInfo
 {
-   double   priceHigh;
-   double   priceLow;
-   double   priceThird;
-   datetime timeA;
-   datetime timeB;
-   int      trend;
+   double          priceHigh;
+   double          priceLow;
+   double          priceThird;
+   datetime        timeA;
+   datetime        timeB;
+   ENUM_ZZMD_TREND trend;
    //---
    void ZigZagMaxInfo(): priceThird(0.0) {}
 };
