@@ -4,6 +4,9 @@ Library for convenient calculation of the [ZigZagMax](https://github.com/mql-sys
 
 The data is collected in the form of a structural array with trend, max-min prices and the start-end time of the trend (one element, one pulse).
 
+![ZigZagMaxData](https://github.com/mql-systems/ZigZagMaxData_inc/raw/main/image.png)
+
+
 ## Installation
 
 Downloading and installing ZigZagMaxData
@@ -16,6 +19,7 @@ ln -s MqlIncludes/DS/ZigZagMaxData ./DS/ZigZagMaxData
 ```
 
 Now upload the [ZigZagMax](https://github.com/mql-systems/ZigZagMax_indicator#download) indicator itself to the folder `MqlIncludes/DS/ZigZagMaxData`. We upload `ZigZagMax.ex4` and `ZigZagMax.ex5` files.
+
 
 ## Examples
 
