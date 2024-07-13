@@ -12,13 +12,11 @@ The data is collected in the form of a structural array with trend, max-min pric
 Downloading and installing ZigZagMaxData
 
 ```bash
-git clone https://github.com/mql-systems/ZigZagMaxData_inc.git MqlIncludes/DS/ZigZagMaxData
-cd YourMT4(or5)Terminal/MQL4(or5)/Include
-mkdir DS
-ln -s MqlIncludes/DS/ZigZagMaxData ./DS/ZigZagMaxData
+cd "YourMT4(5)TerminalPath\MQL4(5)\Include"
+git clone https://github.com/mql-systems/ZigZagMaxData_inc.git MqlSystems/ZigZagMaxData
 ```
 
-Now upload the [ZigZagMax](https://github.com/mql-systems/ZigZagMax_indicator#download) indicator itself to the folder `MqlIncludes/DS/ZigZagMaxData`. We upload `ZigZagMax.ex4` and `ZigZagMax.ex5` files.
+Now upload the [ZigZagMax](https://github.com/mql-systems/ZigZagMax_indicator#download) indicator itself to the folder `MqlSystems/ZigZagMaxData`. We upload `ZigZagMax.ex4` and `ZigZagMax.ex5` files.
 
 
 ## Examples
@@ -28,15 +26,15 @@ Script
 ```mql5
 //+------------------------------------------------------------------+
 //|                                            ZigZagMaxDataTest.mq5 |
-//|                            Copyright 2022. Diamond Systems Corp. |
+//|                       Copyright 2022-2024. Diamond Systems Corp. |
 //|                                   https://github.com/mql-systems |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2022. Diamond Systems Corp."
+#property copyright "Copyright 2022-2024. Diamond Systems Corp."
 #property link      "https://github.com/mql-systems"
 #property version   "1.00"
 #property script_show_inputs
 
-#include <DS/ZigZagMaxData/ZigZagMaxData.mqh>
+#include <MqlSystems/ZigZagMaxData/ZigZagMaxData.mqh>
 
 input int i_CalcBarsCount = 5000;    // Calc bars
 
@@ -62,7 +60,7 @@ void OnStart()
    int zzmdTotal = Zzmd.Total();
    ZigZagMaxInfo zzmdInfo;
    
-   for (int i=0; i<zzmdTotal; i++)
+   for (int i = 0; i < zzmdTotal; i++)
    {
       Print("========== ", i, " ==========");
       

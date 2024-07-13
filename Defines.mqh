@@ -1,9 +1,9 @@
 //+------------------------------------------------------------------+
 //|                                                      Defines.mqh |
-//|                            Copyright 2022. Diamond Systems Corp. |
+//|                       Copyright 2022-2024. Diamond Systems Corp. |
 //|                                   https://github.com/mql-systems |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2022. Diamond Systems Corp."
+#property copyright "Copyright 2022-2024. Diamond Systems Corp."
 #property link      "https://github.com/mql-systems"
 
 #define ZZMD_CALC_BARS_MIN 100
